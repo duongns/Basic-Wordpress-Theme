@@ -1,1 +1,4 @@
-# Basic-Wordpress-Theme
+WP-Basic-Theme
+==============
+
+This is Wordpress theme with basic functions
