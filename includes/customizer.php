@@ -1,94 +1,109 @@
 <?php
-add_action( 'customize_preview_init', 'customize_scripts' );
-function customize_scripts() {
-    wp_enqueue_script( 'customizer', get_template_directory_uri() . '/scripts/customizer.js', array(), 0.5 , true );
-}
+// THEME LOGO CUSTOMIZE
+	add_action( 'after_setup_theme', 'theme_logo_register' );
+	function theme_logo_register() {		
+		add_theme_support( 'custom-logo', array(
+			'height'      => 100,
+			'width'       => 270,
+			'flex-width' => true,
+		) );	
+	}
 
-add_action( 'customize_register', 'customize_register' );
-function customize_register( $wp_customize ) {
-    /**
-     * Add postMessage support for site title and description for the Theme Customizer.
-     */ 
-    $wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
-    $wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
+	add_action( 'customize_register', 'theme_customize_register' );
+	function theme_customize_register( $wp_customize ) {
+	    // Must have
+	    $wp_customize->get_setting( 'blogname' )->transport         = 'postMessage';
+	    $wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
 
-    //___General___//
-    $wp_customize->add_section(
-        'customize_general',
-        array(
-            'title' => 'General',
-            'priority' => 9,
-        )
-    );
+	    // Section
+	    $wp_customize->add_section(
+	        'customize_general',
+	        array(
+	            'title' => 'General',
+	            'priority' => 9,
+	        )
+	    );
+	        // Setting
+	        $wp_customize->add_setting(
+	            'hotline',
+	            array(
+	                'default' => ''
+	            )
+	        );
+	        	// Control
+		        $wp_customize->add_control(
+		            'hotline',
+		            array(
+		                'label'     => 'Hotline',
+		                'section'   => 'customize_general',
+		                'type'      => 'text',
+		            )
+		        );
+		        
+		    // Setting
+	        $wp_customize->add_setting(
+	            'header_custom_html',
+	            array(
+	                'default' => ''
+	            )
+	        );
+	        	// Control
+		        $wp_customize->add_control(
+		            'header_custom_html',
+		            array(
+		               'label'          => 'Before </head> Custom HTML',
+		               'section'        => 'customize_general',
+		               'settings'       => 'header_custom_html',
+		               'type'           => 'textarea',
+		            )
+		        );
+	    
+	    // Section
+	    $wp_customize->add_section(
+	        'customize_slide',
+	        array(
+	            'title' => 'Slide',
+	            'priority' => 11,
+	        )
+	    );
+	        // Setting
+	        $wp_customize->add_setting(
+	            'slide_one',
+	            array(
+	                'default-image' => '',
+	                'sanitize_callback' => 'esc_url_raw'
+	            )
+	        );
+		        // Control
+		        $wp_customize->add_control(
+		            new WP_Customize_Image_Control(
+		                $wp_customize,
+		                'slide_one',
+		                array(
+		                   'label'          => 'Upload Image 1',
+		                   'type'           => 'image',
+		                   'section'        => 'customize_slide',
+		                   'settings'       => 'slide_one'
+		                )
+		            )
+		        );
+	        
+	        // Setting
+	        $wp_customize->add_setting(
+	            'slide_one_url',
+	            array(
+	                'default' => ''
+	            )
+	        );
+		        // Control
+		        $wp_customize->add_control(
+		            'slide_one_url',
+		            array(
+		                'label'     => 'Image 1 URL',
+		                'section'   => 'customize_slide',
+		                'type'      => 'text',
+		            )
+		        );      
 
-        //Logo Upload
-        $wp_customize->add_setting(
-            'site_logo',
-            array(
-                'default-image' => '',
-                'sanitize_callback' => 'esc_url_raw'
-            )
-        );
-        $wp_customize->add_control(
-            new WP_Customize_Image_Control(
-                $wp_customize,
-                'site_logo',
-                array(
-                   'label'          => 'Upload your logo',
-                   'type'           => 'image',
-                   'section'        => 'customize_general',
-                   'settings'       => 'site_logo'
-                )
-            )
-        );
 
-        //Facebook AppID
-        $wp_customize->add_setting(
-            'facebook_appid',
-            array(
-                'default' => ''
-            )
-        );
-        $wp_customize->add_control(
-            'facebook_appid',
-            array(
-                'label'     => 'Facebook AppID',
-                'section'   => 'customize_general',
-                'type'      => 'text',
-            )
-        );
-    
-        //Header Custom HTML
-        $wp_customize->add_setting(
-            'header_custom_html',
-            array(
-                'default' => ''
-            )
-        );
-        $wp_customize->add_control(
-            'header_custom_html',
-            array(
-               'label'          => 'Header Custom HTML',
-               'section'        => 'customize_general',
-               'settings'       => 'header_custom_html',
-               'type'           => 'textarea',
-            )
-        );
-    
-    	//Footer Custom HTML
-    	$wp_customize->add_setting(
-    		'footer_custom_html',
-    		array(
-    			'default' => ''
-    		)
-    	);
-        $wp_customize->add_control(
-            'footer_custom_html',
-            array(
-               'label'          => 'Footer Custom HTML',
-               'section'        => 'customize_general',
-               'settings'       => 'footer_custom_html',
-               'type'    		=> 'textarea',
-            )
-        );
-}
+	}
